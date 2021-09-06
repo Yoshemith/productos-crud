@@ -6,12 +6,29 @@ const products = JSON.parse(fs.readFileSync(productsFilePath, 'utf-8'));
 
 const toThousand = n => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
+const visited = products.filter(function(product){
+	return product.category == 'visited'
+});
+const inSale = products.filter(function(product){
+	return product.category == 'in-sale'
+});
+
 const controller = {
 	index: (req, res) => {
-		res.render('index');
+		res.render('index', {
+			visited,
+			inSale,
+			toThousand
+		});
 	},
 	search: (req, res) => {
-		res.render('products');
+		let search = req.query.keywords;
+		let productsToSearch = products.filter(product => product.name.toLowerCase().includes(search));	
+		res.render('results', { 
+			products: productsToSearch, 
+			search,
+			toThousand,
+		});
 	},
 };
 
