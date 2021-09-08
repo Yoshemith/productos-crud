@@ -73,15 +73,24 @@ const controller = {
 		});
 
 		fs.writeFileSync(productsFilePath, JSON.stringify(newProducts, null, ' '));
-		res.redirect('/');
+		res.redirect('/products');
 	},
 
 	// Delete - Delete one product from DB
 	destroy : (req, res) => {
 		let id = req.params.id;
-		let finalProducts = products.filter(product => product.id != id);
+		const productToDelete = products.findIndex(producto => id == producto.id);
+		if(productToDelete >= 0){
+			products.splice(productToDelete, 1);
+			fs.writeFileSync(productsFilePath, JSON.stringify(products, null, 2), 'utf-8')
+			res.redirect('/products');
+		}
+		else{
+			res.redirect('/products');
+		}
+		/* let finalProducts = products.filter(product => product.id != id);
 		fs.writeFileSync(productsFilePath, JSON.stringify(finalProducts, null, ' '));
-		res.redirect('/');
+		res.redirect('/'); */
 	}
 };
 
