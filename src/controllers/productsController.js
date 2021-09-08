@@ -32,14 +32,20 @@ const controller = {
 	
 	// Create -  Method to store
 	store: (req, res) => {
+		let upImage; 
+		if(req.file){
+			upImage = req.file.filename;
+		}else{
+			upImage = 'default-image.png';
+		}
 		let newProduct = {
 			...req.body,
-			image: 'default-image.png',
+			image: upImage,
 			id: products[products.length - 1].id + 1
 		};
 		products.push(newProduct);
 		fs.writeFileSync(productsFilePath, JSON.stringify(products, null, ' '));
-		res.redirect('/');
+		res.redirect('/products');
 	},
 
 	// Update - Form to edit
